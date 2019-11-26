@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BannerY.iml" filepath="$PROJECT_DIR$/BannerY.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library_banner/library_banner.iml" filepath="$PROJECT_DIR$/library_banner/library_banner.iml" />
+    </modules>
+  </component>
+</project>

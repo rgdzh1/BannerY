@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BannerY">
+        <attr name="point_size" format="dimension|reference" />
+        <attr name="point_selecter" format="reference" />
+        <attr name="point_bottom_margin" format="dimension|reference" />
+        <attr name="desc_bottom_margin" format="dimension|reference" />
+        <attr name="desc_color" format="color|reference" />
+        <attr name="desc_size" format="dimension|reference" />
+        <attr name="banner_interval" format="integer" />
+    </declare-styleable>
+</resources>
