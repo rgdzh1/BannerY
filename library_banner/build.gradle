@@ -94,6 +94,7 @@ bintray {
         desc = 'Banner'
         licenses = ["Apache-2.0"]
         publish = true
+
     }
 }
 
