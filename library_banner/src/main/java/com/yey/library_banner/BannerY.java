@@ -27,10 +27,8 @@ public class BannerY extends ConstraintLayout {
     private TextView mTvDesc;
     private LinearLayout mLLPoint;
     Context mContext;
-    private ArrayList<ImageView> mImageList;
+    private ArrayList<ImageView> mImageViewList;
     private ArrayList<String> mDescList;
-    private ArrayList<String> mImageUrlList;
-    int mBannerLenght;
     private float mPointSize;
     private int mPointSelecter;
     private int mInterval;
@@ -101,9 +99,8 @@ public class BannerY extends ConstraintLayout {
 
     @SuppressLint("HandlerLeak")
     private void initData() {
-        mImageList = new ArrayList<>();
+        mImageViewList = new ArrayList<>();
         mDescList = new ArrayList<>();
-        mImageUrlList = new ArrayList<>();
         mHandler = new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -125,8 +122,8 @@ public class BannerY extends ConstraintLayout {
             @Override
             public void onPageSelected(int position) {
                 //选中该图时
-                int realPosition = position % mBannerLenght;
-                if (mDescList.size() == mBannerLenght) {
+                int realPosition = position % mImageViewList.size();
+                if (mDescList.size() == mImageViewList.size()) {
                     String desc = mDescList.get(realPosition);
                     mTvDesc.setText(desc);
                 } else {
@@ -157,24 +154,23 @@ public class BannerY extends ConstraintLayout {
     /**
      * 从网络获取图片
      *
-     * @param images
      */
-    public void setImagesUrl(ArrayList<String> images) {
-        if (judgeLenght(images)) {
-            mImageUrlList.clear();
-            mImageUrlList.addAll(images);
-            mBannerLenght = images.size();
-            for (int i = 0; i < images.size(); i++) {
+    public void setImagesUrl(ArrayList<String> imagesUrl) {
+        if (judgeLenght(imagesUrl)) {
+            mImageViewList.clear();
+            for (int i = 0; i < imagesUrl.size(); i++) {
+                //添加图片列表
+                initImageList(imagesUrl, i);
                 //添加指示器
                 addPoint(i);
             }
-            mBannerUrlAdapter = new BannerUrlAdapter(mHandler, mInterval, mImageUrlList, mContext);
+            mBannerUrlAdapter = new BannerUrlAdapter(mHandler, mInterval, mImageViewList, imagesUrl, mContext);
             mVp.setAdapter(mBannerUrlAdapter);
             //设置中间位置
-            int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageUrlList.size();//要保证imageViews的整数倍
+            int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageViewList.size();//要保证imageViews的整数倍
             mVp.setCurrentItem(position);
 
-            if (mDescList.size() == mImageUrlList.size()) {
+            if (mDescList.size() == mImageViewList.size()) {
                 mTvDesc.setText(mDescList.get(prePosition));
             }
             //发消息
@@ -185,26 +181,25 @@ public class BannerY extends ConstraintLayout {
     /**
      * 从资源文件获取图片
      *
-     * @param images
+     * @param imagesRes
      */
-    public void setImagesRes(ArrayList<Integer> images) {
-        if (judgeLenght(images)) {
-            mImageList.clear();
-            mBannerLenght = images.size();
-            for (int i = 0; i < images.size(); i++) {
+    public void setImagesRes(ArrayList<Integer> imagesRes) {
+        if (judgeLenght(imagesRes)) {
+            mImageViewList.clear();
+            for (int i = 0; i < imagesRes.size(); i++) {
                 //添加图片列表
-                initImageList(images, i);
+                initImageList(imagesRes, i);
 
                 //添加指示器
                 addPoint(i);
             }
-            mBannerAdapter = new BannerAdapter(mHandler, mImageList, mInterval);
+            mBannerAdapter = new BannerAdapter(mHandler, mImageViewList,imagesRes, mInterval);
             mVp.setAdapter(mBannerAdapter);
             //设置中间位置
-            int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageList.size();//要保证imageViews的整数倍
+            int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageViewList.size();//要保证imageViews的整数倍
             mVp.setCurrentItem(position);
 
-            if (mDescList.size() == mImageList.size()) {
+            if (mDescList.size() == mImageViewList.size()) {
                 mTvDesc.setText(mDescList.get(prePosition));
             }
             //发消息
@@ -262,13 +257,12 @@ public class BannerY extends ConstraintLayout {
      * @param images
      * @param i
      */
-    private void initImageList(ArrayList<Integer> images, int i) {
+    private <T> void initImageList(ArrayList<T> images, int i) {
         ImageView imageView = new ImageView(mContext);
-        imageView.setImageResource(images.get(i));
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(layoutParams);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        mImageList.add(imageView);
+        mImageViewList.add(imageView);
     }
 
 

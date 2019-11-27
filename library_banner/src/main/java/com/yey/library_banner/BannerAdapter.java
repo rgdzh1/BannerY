@@ -19,12 +19,14 @@ public class BannerAdapter extends PagerAdapter {
     Handler mHandler;
     ArrayList<ImageView> mImageList;
     int mInterval;
+    ArrayList<Integer> mImagesRes;
     IClickBanner mIClickBanner;
 
-    public BannerAdapter(Handler mHandler, ArrayList<ImageView> mImageList, int mInterval) {
+    public BannerAdapter(Handler mHandler, ArrayList<ImageView> mImageList, ArrayList<Integer> imagesRes, int mInterval) {
         this.mHandler = mHandler;
         this.mImageList = mImageList;
         this.mInterval = mInterval;
+        this.mImagesRes = imagesRes;
     }
 
     public void setClickBanner(IClickBanner mIClickBanner) {
@@ -42,6 +44,7 @@ public class BannerAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         final int realPosition = position % mImageList.size();
         ImageView imageView = mImageList.get(realPosition);//通过索引在这里取得图像,返回给ViewPager
+        imageView.setImageResource(mImagesRes.get(realPosition));
         container.addView(imageView);
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override

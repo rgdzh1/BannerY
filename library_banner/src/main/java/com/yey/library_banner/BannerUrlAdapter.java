@@ -23,22 +23,17 @@ public class BannerUrlAdapter extends PagerAdapter {
     int mInterval;
     IClickBanner mIClickBanner;
     ArrayList<String> mUrlList;
-    ArrayList<ImageView> mImagesList = new ArrayList<>();
+    ArrayList<ImageView> mImageViewList;
     private final ImageLoader imageLoader;
 
-    public BannerUrlAdapter(Handler mHandler, int mInterval, ArrayList<String> mUrlList, Context mContext) {
+    public BannerUrlAdapter(Handler mHandler, int mInterval, ArrayList<ImageView> mImageViewList, ArrayList<String> mUrlList, Context mContext) {
         this.mHandler = mHandler;
         this.mInterval = mInterval;
         this.mUrlList = mUrlList;
+        this.mImageViewList = mImageViewList;
+
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
-        for (int i = 0; i < mUrlList.size(); i++) {
-            ImageView imageView = new ImageView(mContext);
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            imageView.setLayoutParams(layoutParams);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            mImagesList.add(imageView);
-        }
     }
 
     public void setClickBanner(IClickBanner mIClickBanner) {
@@ -56,7 +51,7 @@ public class BannerUrlAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         final int realPosition = position % mUrlList.size();
         String url = mUrlList.get(realPosition);//通过索引在这里取得图像,返回给ViewPager
-        ImageView imageView = mImagesList.get(realPosition);
+        ImageView imageView = mImageViewList.get(realPosition);
         imageLoader.displayImage(url, imageView);
         container.addView(imageView);
         imageView.setOnTouchListener(new View.OnTouchListener() {

@@ -45,7 +45,7 @@ group = "com.yey.bannery"
 //libName(库的名字)
 def libName = "BannerY"
 //version(版本号)
-version = "0.0.4"
+version = "0.0.5"
 //生成源文件
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
