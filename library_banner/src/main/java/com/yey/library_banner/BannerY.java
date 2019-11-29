@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 
@@ -32,7 +33,7 @@ public class BannerY extends ConstraintLayout {
     private float mPointSize;
     private int mPointSelecter;
     private int mInterval;
-    private Handler mHandler;
+
     private BannerAdapter mBannerAdapter;
     private int prePosition;
     private boolean isDragging;
@@ -40,7 +41,8 @@ public class BannerY extends ConstraintLayout {
     private float mPointBottomMargin;
     private int mDescColor;
     private float mDescSize;
-    private BannerUrlAdapter mBannerUrlAdapter;
+    private Handler mHandler;
+    private int mScaleType;
 
     public BannerY(Context context) {
         this(context, null);
@@ -76,6 +78,7 @@ public class BannerY extends ConstraintLayout {
         mPointBottomMargin = typedArray.getDimension(R.styleable.BannerY_point_bottom_margin, DensityUtil.dip2px(context, 8));
         mDescColor = typedArray.getColor(R.styleable.BannerY_desc_color, Color.BLACK);
         mDescSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_desc_size, 14);
+        mScaleType = typedArray.getInt(R.styleable.BannerY_banner_scaletype, -1);
         typedArray.recycle();
         fixParams();
     }
@@ -110,6 +113,7 @@ public class BannerY extends ConstraintLayout {
                 mHandler.sendEmptyMessageDelayed(1, mInterval);
             }
         };
+
     }
 
     private void initListener() {
@@ -152,48 +156,21 @@ public class BannerY extends ConstraintLayout {
     }
 
     /**
-     * 从网络获取图片
-     *
-     */
-    public void setImagesUrl(ArrayList<String> imagesUrl) {
-        if (judgeLenght(imagesUrl)) {
-            mImageViewList.clear();
-            for (int i = 0; i < imagesUrl.size(); i++) {
-                //添加图片列表
-                initImageList(imagesUrl, i);
-                //添加指示器
-                addPoint(i);
-            }
-            mBannerUrlAdapter = new BannerUrlAdapter(mHandler, mInterval, mImageViewList, imagesUrl, mContext);
-            mVp.setAdapter(mBannerUrlAdapter);
-            //设置中间位置
-            int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageViewList.size();//要保证imageViews的整数倍
-            mVp.setCurrentItem(position);
-
-            if (mDescList.size() == mImageViewList.size()) {
-                mTvDesc.setText(mDescList.get(prePosition));
-            }
-            //发消息
-            mHandler.sendEmptyMessageDelayed(0, mInterval);
-        }
-    }
-
-    /**
-     * 从资源文件获取图片
      *
      * @param imagesRes
+     * @param <T>
      */
-    public void setImagesRes(ArrayList<Integer> imagesRes) {
+    public <T> void setImagesRes(ArrayList<T> imagesRes) {
         if (judgeLenght(imagesRes)) {
             mImageViewList.clear();
             for (int i = 0; i < imagesRes.size(); i++) {
                 //添加图片列表
-                initImageList(imagesRes, i);
+                initImageList();
 
                 //添加指示器
                 addPoint(i);
             }
-            mBannerAdapter = new BannerAdapter(mHandler, mImageViewList,imagesRes, mInterval);
+            mBannerAdapter = new BannerAdapter(mHandler, mImageViewList, imagesRes, mInterval, mContext);
             mVp.setAdapter(mBannerAdapter);
             //设置中间位置
             int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageViewList.size();//要保证imageViews的整数倍
@@ -253,15 +230,13 @@ public class BannerY extends ConstraintLayout {
 
     /**
      * 初始化图片列表
-     *
-     * @param images
-     * @param i
      */
-    private <T> void initImageList(ArrayList<T> images, int i) {
+    private void initImageList() {
         ImageView imageView = new ImageView(mContext);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(layoutParams);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        ImageView.ScaleType scaleType = sScaleTypeArray[mScaleType];
+        imageView.setScaleType(scaleType);
         mImageViewList.add(imageView);
     }
 
@@ -274,5 +249,25 @@ public class BannerY extends ConstraintLayout {
         } else {
             return true;
         }
+    }
+
+    private static final ImageView.ScaleType[] sScaleTypeArray = {
+            ImageView.ScaleType.MATRIX,
+            ImageView.ScaleType.FIT_XY,
+            ImageView.ScaleType.FIT_START,
+            ImageView.ScaleType.FIT_CENTER,
+            ImageView.ScaleType.FIT_END,
+            ImageView.ScaleType.CENTER,
+            ImageView.ScaleType.CENTER_CROP,
+            ImageView.ScaleType.CENTER_INSIDE
+    };
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Log.e(TAG, " 旋转屏幕执行该方法");
+        // 防止内存泄漏
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler = null;
     }
 }

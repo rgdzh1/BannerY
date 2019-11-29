@@ -30,4 +30,7 @@ dependencies {
     implementation project(path: ':library_banner')
 //    implementation 'com.yey.bannery:library_banner:0.0.5'
 
+    //leakcanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
+
 }

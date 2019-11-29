@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <com.yey.library_banner.BannerY
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        app:banner_interval="1000"
+        app:banner_interval="3000"
+        app:banner_scaletype="centerInside"
         app:desc_bottom_margin="10dp"
         app:desc_color="@color/colorAccent"
         app:desc_size="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:point_bottom_margin="40dp"
         app:point_selecter="@drawable/point_selector_use"
         app:point_size="4dp" />
@@ -26,16 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="24dp"
-        app:banner_interval="2000"
+        app:banner_interval="3000"
+        app:banner_scaletype="centerCrop"
         app:desc_bottom_margin="40dp"
         app:desc_color="@color/colorPrimaryDark"
         app:desc_size="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/banner"
         app:point_bottom_margin="10dp"
         app:point_selecter="@drawable/point_selector_use"
         app:point_size="4dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -3,8 +3,10 @@ package com.yey.bannery;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.yey.library_banner.BannerY;
+import com.yey.library_banner.IClickBanner;
 
 import java.util.ArrayList;
 
@@ -33,8 +35,14 @@ public class MainActivity extends AppCompatActivity {
         urlList.add("https://ww4.sinaimg.cn/bmiddle/005QVDzfly1g9bmtmaglhj30go0gp77x.jpg");
         urlList.add("https://ww4.sinaimg.cn/bmiddle/005QVDzfly1g9bmtmmrofj30go0gpaen.jpg");
         urlList.add("https://ww1.sinaimg.cn/bmiddle/005QVDzfly1g9bmtk204sj30go0gpjva.jpg");
-        bannerY2.setImagesUrl(urlList);
+        bannerY2.setImagesRes(urlList);
         bannerY2.setDescList(descList);
+        bannerY2.setClickBanner(new IClickBanner() {
+            @Override
+            public void click(int i) {
+                Toast.makeText(MainActivity.this, i + "bannerY2 被点击", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void banner1() {
@@ -51,5 +59,11 @@ public class MainActivity extends AppCompatActivity {
         integers.add(R.mipmap.banner_4);
         bannerY.setImagesRes(integers);
         bannerY.setDescList(strings);
+        bannerY.setClickBanner(new IClickBanner() {
+            @Override
+            public void click(int i) {
+                Toast.makeText(MainActivity.this, i + "bannerY 被点击", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
