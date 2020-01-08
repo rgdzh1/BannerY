@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class BannerAdapter<T> extends PagerAdapter {
     private final static String TAG = BannerAdapter.class.getName();
-   Handler mHandler;
+    Handler mHandler;
     ArrayList<ImageView> mImageViewList;
     int mInterval;
     ArrayList<T> mImagesRes;
@@ -29,10 +29,10 @@ public class BannerAdapter<T> extends PagerAdapter {
     ImageLoader imageLoader;
 
     /**
-     * @param mHandler handler
-     * @param mImageViewList       ImageView 控件列表
-     * @param imagesRes            Image 资源列表
-     * @param mInterval            handler发送消息间隔时常
+     * @param mHandler       handler
+     * @param mImageViewList ImageView 控件列表
+     * @param imagesRes      Image 资源列表
+     * @param mInterval      handler发送消息间隔时常
      */
     public BannerAdapter(Handler mHandler, ArrayList<ImageView> mImageViewList, ArrayList<T> imagesRes, int mInterval, Context mContext) {
         this.mHandler = mHandler;

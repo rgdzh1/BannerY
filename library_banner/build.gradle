@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 18
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -47,7 +47,7 @@ group = "com.yey.bannery"
 //libName(库的名字)
 def libName = "BannerY"
 //version(版本号)
-version = "0.0.9"
+version = "0.1.0"
 //生成源文件
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
