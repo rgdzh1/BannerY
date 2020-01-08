@@ -60,7 +60,6 @@ public class BannerAdapter<T> extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         final int realPosition = position % mImageViewList.size();
-        Log.e("拿到的索引", realPosition + "");
         //通过索引在这里取得图像,返回给ViewPager
         ImageView imageView = mImageViewList.get(realPosition);
         if (imageResClass.equals(String.class)) {
@@ -98,6 +97,10 @@ public class BannerAdapter<T> extends PagerAdapter {
                 }
             }
         });
+        ViewParent viewParent = imageView.getParent();
+        if (viewParent != null) {
+            ((ViewGroup) viewParent).removeView(imageView);
+        }
         container.addView(imageView);
         return imageView;
     }
@@ -109,7 +112,7 @@ public class BannerAdapter<T> extends PagerAdapter {
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-//        super.destroyItem(container, position, object);
-        container.removeView((View) object);
+        //这里如果删除的话,两张白屏的现象就会出现
+//        container.removeView((View) object);
     }
 }

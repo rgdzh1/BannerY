@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         banner1();
-        banner2();
+//        banner2();
     }
 
     private void banner2() {
@@ -49,12 +49,12 @@ public class MainActivity extends AppCompatActivity {
         bannerY = (BannerY) findViewById(R.id.banner);
         ArrayList<Integer> integers = new ArrayList<>();
         ArrayList<String> strings = new ArrayList<>();
-        strings.add("111111111");
-        strings.add("222222222");
+//        strings.add("111111111");
+//        strings.add("222222222");
         strings.add("333333333");
         strings.add("444444444");
-        integers.add(R.mipmap.banner_1);
-        integers.add(R.mipmap.banner_2);
+//        integers.add(R.mipmap.banner_1);
+//        integers.add(R.mipmap.banner_2);
         integers.add(R.mipmap.banner_3);
         integers.add(R.mipmap.banner_4);
         bannerY.setImagesRes(integers);
