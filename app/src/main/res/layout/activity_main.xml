@@ -11,7 +11,7 @@
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        app:banner_interval="3000"
+        app:banner_interval="2000"
         app:banner_scaletype="centerInside"
         app:desc_bottom_margin="10dp"
         app:desc_color="@color/colorAccent"

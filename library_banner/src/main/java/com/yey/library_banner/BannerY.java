@@ -175,12 +175,11 @@ public class BannerY extends ConstraintLayout {
             //设置中间位置
             int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageViewList.size();//要保证imageViews的整数倍
             mVp.setCurrentItem(position);
-
+            //发消息
+            mHandler.sendEmptyMessageDelayed(1, mInterval);
             if (mDescList.size() == mImageViewList.size()) {
                 mTvDesc.setText(mDescList.get(prePosition));
             }
-            //发消息
-            mHandler.sendEmptyMessageDelayed(0, mInterval);
         }
     }
 

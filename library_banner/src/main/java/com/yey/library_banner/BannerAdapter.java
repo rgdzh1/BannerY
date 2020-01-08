@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -58,7 +60,9 @@ public class BannerAdapter<T> extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         final int realPosition = position % mImageViewList.size();
-        ImageView imageView = mImageViewList.get(realPosition);//通过索引在这里取得图像,返回给ViewPager
+        Log.e("拿到的索引", realPosition + "");
+        //通过索引在这里取得图像,返回给ViewPager
+        ImageView imageView = mImageViewList.get(realPosition);
         if (imageResClass.equals(String.class)) {
             String url = (String) mImagesRes.get(realPosition);
             imageLoader.displayImage(url, imageView);
@@ -67,7 +71,6 @@ public class BannerAdapter<T> extends PagerAdapter {
             Integer resId = (Integer) mImagesRes.get(realPosition);
             imageView.setImageResource(resId);
         }
-//        container.addView(imageView);
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -95,6 +98,7 @@ public class BannerAdapter<T> extends PagerAdapter {
                 }
             }
         });
+        container.addView(imageView);
         return imageView;
     }
 
