@@ -85,6 +85,7 @@ public class BannerY extends ConstraintLayout {
         fixParams();
     }
 
+
     /**
      * 修正指示器和描述距离底部距离
      */
