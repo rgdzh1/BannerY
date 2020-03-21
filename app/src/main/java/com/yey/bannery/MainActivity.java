@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         banner1();
-//        banner2();
+        banner2();
     }
 
     private void banner2() {

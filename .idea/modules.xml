@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BannerY.iml" filepath="$PROJECT_DIR$/BannerY.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library_banner/library_banner.iml" filepath="$PROJECT_DIR$/library_banner/library_banner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BannerY.iml" filepath="$PROJECT_DIR$/BannerY.iml" group="BannerY" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="BannerY/app" />
+      <module fileurl="file://$PROJECT_DIR$/library_banner/library_banner.iml" filepath="$PROJECT_DIR$/library_banner/library_banner.iml" group="BannerY/library_banner" />
     </modules>
   </component>
 </project>

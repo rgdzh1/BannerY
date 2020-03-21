@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.nostra13.universalimageloader.BuildConfig;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -30,7 +32,7 @@ public class BannerY extends ConstraintLayout {
     Context mContext;
     private ArrayList<ImageView> mImageViewList;
     private ArrayList<String> mDescList;
-    private float mPointSize;
+    private int mPointSize;
     private int mPointSelecter;
     private int mInterval;
 
@@ -71,11 +73,11 @@ public class BannerY extends ConstraintLayout {
 
     private void initXmlParams(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BannerY, defStyleAttr, 0);
-        mPointSize = typedArray.getDimension(R.styleable.BannerY_point_size, DensityUtil.dip2px(context, 8));
+        mPointSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_size,8);
         mPointSelecter = typedArray.getResourceId(R.styleable.BannerY_point_selecter, R.drawable.point_selector);
         mInterval = typedArray.getInteger(R.styleable.BannerY_banner_interval, 2000);
-        mTvBottomMargin = typedArray.getDimension(R.styleable.BannerY_desc_bottom_margin, DensityUtil.dip2px(context, 16));
-        mPointBottomMargin = typedArray.getDimension(R.styleable.BannerY_point_bottom_margin, DensityUtil.dip2px(context, 8));
+        mTvBottomMargin = typedArray.getDimensionPixelSize(R.styleable.BannerY_desc_bottom_margin, 8);
+        mPointBottomMargin = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_bottom_margin,8);
         mDescColor = typedArray.getColor(R.styleable.BannerY_desc_color, Color.BLACK);
         mDescSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_desc_size, 14);
         mScaleType = typedArray.getInt(R.styleable.BannerY_banner_scaletype, -1);
@@ -92,7 +94,8 @@ public class BannerY extends ConstraintLayout {
         mTvDescLayoutParams.bottomMargin = (int) mTvBottomMargin;
         mTvDesc.setLayoutParams(mTvDescLayoutParams);
         mTvDesc.setTextColor(mDescColor);
-        mTvDesc.setTextSize(mDescSize);
+        mTvDesc.getPaint().setTextSize(mDescSize);
+//        mTvDesc.setTextSize(mDescSize);
         //指示器
         LayoutParams mLLPointLayoutParams = (LayoutParams) mLLPoint.getLayoutParams();
         mLLPointLayoutParams.bottomMargin = (int) mPointBottomMargin;
@@ -131,7 +134,8 @@ public class BannerY extends ConstraintLayout {
                     String desc = mDescList.get(realPosition);
                     mTvDesc.setText(desc);
                 } else {
-                    Log.d(TAG, "文字集合和图片集合长度不相等");
+                    if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "文字集合和图片集合长度不相等");}
                 }
                 mLLPoint.getChildAt(prePosition).setEnabled(false);
                 mLLPoint.getChildAt(realPosition).setEnabled(true);
@@ -214,13 +218,12 @@ public class BannerY extends ConstraintLayout {
     private void addPoint(int i) {
         ImageView point = new ImageView(mContext);
         point.setImageResource(mPointSelecter);
-        int pointSize = DensityUtil.dip2px(mContext, this.mPointSize);
-        LinearLayout.LayoutParams pointParams = new LinearLayout.LayoutParams(pointSize, pointSize);
+        LinearLayout.LayoutParams pointParams = new LinearLayout.LayoutParams(mPointSize, mPointSize);
         if (i == 0) {
             point.setEnabled(true);
         } else {
             point.setEnabled(false);
-            pointParams.leftMargin = pointSize;
+            pointParams.leftMargin = mPointSize;
         }
         point.setLayoutParams(pointParams);
         mLLPoint.addView(point);

@@ -2,6 +2,7 @@ package com.yey.library_banner;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.nostra13.universalimageloader.BuildConfig;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -93,7 +95,9 @@ public class BannerAdapter<T> extends PagerAdapter {
                     int positon = (int) v.getTag();
                     mIClickBanner.click(position % mImageViewList.size());
                 } else {
-                    Log.e(TAG, "图片回调方法为不存在");
+                    if (BuildConfig.DEBUG){
+                        Log.e(TAG, "图片回调方法为不存在");
+                    }
                 }
             }
         });
