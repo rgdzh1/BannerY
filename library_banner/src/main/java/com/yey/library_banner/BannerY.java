@@ -9,6 +9,8 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +21,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.nostra13.universalimageloader.BuildConfig;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -60,6 +64,11 @@ public class BannerY extends ConstraintLayout {
         initXmlParams(context, attrs, defStyleAttr);
         initListener();
         initData();
+        initImageLoader();
+    }
+
+    private void initImageLoader() {
+        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(mContext));
     }
 
 
@@ -73,11 +82,11 @@ public class BannerY extends ConstraintLayout {
 
     private void initXmlParams(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BannerY, defStyleAttr, 0);
-        mPointSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_size,8);
+        mPointSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_size, 8);
         mPointSelecter = typedArray.getResourceId(R.styleable.BannerY_point_selecter, R.drawable.point_selector);
         mInterval = typedArray.getInteger(R.styleable.BannerY_banner_interval, 2000);
         mTvBottomMargin = typedArray.getDimensionPixelSize(R.styleable.BannerY_desc_bottom_margin, 8);
-        mPointBottomMargin = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_bottom_margin,8);
+        mPointBottomMargin = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_bottom_margin, 8);
         mDescColor = typedArray.getColor(R.styleable.BannerY_desc_color, Color.BLACK);
         mDescSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_desc_size, 14);
         mScaleType = typedArray.getInt(R.styleable.BannerY_banner_scaletype, -1);
@@ -96,7 +105,6 @@ public class BannerY extends ConstraintLayout {
         mTvDesc.setLayoutParams(mTvDescLayoutParams);
         mTvDesc.setTextColor(mDescColor);
         mTvDesc.getPaint().setTextSize(mDescSize);
-//        mTvDesc.setTextSize(mDescSize);
         //指示器
         LayoutParams mLLPointLayoutParams = (LayoutParams) mLLPoint.getLayoutParams();
         mLLPointLayoutParams.bottomMargin = (int) mPointBottomMargin;
@@ -136,7 +144,8 @@ public class BannerY extends ConstraintLayout {
                     mTvDesc.setText(desc);
                 } else {
                     if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "文字集合和图片集合长度不相等");}
+                        Log.d(TAG, "文字集合和图片集合长度不相等");
+                    }
                 }
                 mLLPoint.getChildAt(prePosition).setEnabled(false);
                 mLLPoint.getChildAt(realPosition).setEnabled(true);
@@ -145,14 +154,14 @@ public class BannerY extends ConstraintLayout {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager.SCROLL_STATE_DRAGGING) {//滑动
+                if (state == ViewPager.SCROLL_STATE_DRAGGING) {//正在滑动
                     isDragging = true;
                     mHandler.removeCallbacksAndMessages(null);
                 }
-                if (state == ViewPager.SCROLL_STATE_SETTLING) {//滑动后自然停止状态
+                if (state == ViewPager.SCROLL_STATE_SETTLING) {// 惯性滑动
 
                 }
-                if (state == ViewPager.SCROLL_STATE_IDLE && isDragging) {//滑动后自然停止状态
+                if (state == ViewPager.SCROLL_STATE_IDLE && isDragging) {//空闲状态
                     mHandler.removeCallbacksAndMessages(null);
                     mHandler.sendEmptyMessageDelayed(1, mInterval);
                 }
@@ -161,21 +170,16 @@ public class BannerY extends ConstraintLayout {
     }
 
     /**
-     *
      * @param imagesRes
      * @param <T>
      */
     public <T> void setImagesRes(ArrayList<T> imagesRes) {
         if (judgeLenght(imagesRes)) {
             mImageViewList.clear();
-            for (int i = 0; i < imagesRes.size(); i++) {
-                //添加图片列表
-                initImageList();
-
-                //添加指示器
-                addPoint(i);
-            }
-            mBannerAdapter = new BannerAdapter(mHandler, mImageViewList, imagesRes, mInterval, mContext);
+            // 初始化图片列表
+            initImageList(imagesRes);
+            // 创建Adapter
+            mBannerAdapter = new BannerAdapter(mImageViewList);
             mVp.setAdapter(mBannerAdapter);
             //设置中间位置
             int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageViewList.size();//要保证imageViews的整数倍
@@ -198,16 +202,14 @@ public class BannerY extends ConstraintLayout {
         }
     }
 
+    IClickBanner mIClickBanner;
+
     /**
-     * 为banner 图设置回调
+     * 为banner 图片点击设置回调
      */
 
     public void setClickBanner(IClickBanner mIClickBanner) {
-        if (mBannerAdapter != null) {
-            mBannerAdapter.setClickBanner(mIClickBanner);
-        } else {
-            Log.e(TAG, "先设置图片资源集合再设置图片回调");
-        }
+        this.mIClickBanner = mIClickBanner;
     }
 
 
@@ -234,20 +236,89 @@ public class BannerY extends ConstraintLayout {
     /**
      * 初始化图片列表
      */
-    private void initImageList() {
+    private void initImageList(ArrayList imagesRes) {
+        Class<?> imageResClass = imagesRes.get(0).getClass();
+        for (int i = 0; i < imagesRes.size(); i++) {
+            // 创建ImageView
+            ImageView imageView = createImageView(imagesRes, i, imageResClass);
+            // 为ImageView设置点击事件
+            setImageViewListener(imageView);
+            // 将ImageView添加进集合中
+            mImageViewList.add(imageView);
+            //添加指示器
+            addPoint(i);
+        }
+    }
+
+    /**
+     * 为ImageView对象设置点击事件和触摸事件
+     *
+     * @param imageView
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    private void setImageViewListener(ImageView imageView) {
+        imageView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mHandler.removeCallbacksAndMessages(null);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mHandler.removeCallbacksAndMessages(null);
+                        mHandler.sendEmptyMessageDelayed(1, mInterval);
+                        break;
+                }
+                return false;
+            }
+        });
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mIClickBanner != null) {
+                    int positon = (int) v.getTag();
+                    int i = positon % mImageViewList.size();
+                    mIClickBanner.click(i);
+                } else {
+                    if (BuildConfig.DEBUG) {
+                        Log.e(TAG, "图片回调方法为不存在");
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 根据参数创建ImageView对象
+     *
+     * @param imagesRes
+     * @param i
+     * @param imageResClass
+     * @return
+     */
+    private ImageView createImageView(ArrayList imagesRes, int i, Class<?> imageResClass) {
         ImageView imageView = new ImageView(mContext);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(layoutParams);
         ImageView.ScaleType scaleType = sScaleTypeArray[mScaleType];
         imageView.setScaleType(scaleType);
-        mImageViewList.add(imageView);
+        if (imageResClass.equals(String.class)) {
+            String url = (String) imagesRes.get(i);
+            ImageLoader.getInstance().displayImage(url, imageView);
+        } else if (imageResClass.equals(Integer.class)) {
+            Integer resId = (Integer) imagesRes.get(i);
+            imageView.setImageResource(resId);
+        }
+        return imageView;
     }
 
 
     private <T> boolean judgeLenght(ArrayList<T> images) {
         int length = images.size();
         if (length <= 0) {
-            Log.e(TAG, "图片或者文字描述集合不能为空");
+            if (com.yey.library_banner.BuildConfig.DEBUG) {
+                Log.e(TAG, "图片或者文字描述集合不能为空");
+            }
             return false;
         } else {
             return true;
@@ -268,7 +339,9 @@ public class BannerY extends ConstraintLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.e(TAG, " 旋转屏幕执行该方法");
+        if (com.yey.library_banner.BuildConfig.DEBUG) {
+            Log.e(TAG, " 旋转屏幕执行该方法");
+        }
         // 防止内存泄漏
         mHandler.removeCallbacksAndMessages(null);
         mHandler = null;
