@@ -29,7 +29,7 @@ implementation 'com.yey.bannery:library_banner:0.1.6'
     app:point_bg="@drawable/point_bg"
     app:point_size="8dp" />
 
-#### point_bg.xml
+#### 指示器背景资源 point_bg.xml
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false" android:drawable="@drawable/point_normal"/>
