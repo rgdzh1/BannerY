@@ -28,13 +28,15 @@ implementation 'com.yey.bannery:library_banner:0.1.6'
     app:point_bottom_margin="10dp"
     app:point_bg="@drawable/point_bg"
     app:point_size="8dp" />
-// point_bg.xml
+
+#### point_bg.xml
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false" android:drawable="@drawable/point_normal"/>
     <item android:state_enabled="true" android:drawable="@drawable/point_press"/>
 </selector>
-// point_press.xml
+
+#### point_press.xml
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
@@ -43,7 +45,8 @@ implementation 'com.yey.bannery:library_banner:0.1.6'
         android:height="8dp" />
     <solid android:color="@color/colorAccent"/>
 </shape>
-// point_normal.xml
+
+#### point_normal.xml
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
