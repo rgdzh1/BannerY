@@ -1,4 +1,5 @@
 # BannerY
+> [原理介绍](https://blog.csdn.net/MoLiao2046/article/details/105918542)
 #### 属性介绍
 | 属性 |   解释   |
 | --- | -------- |
@@ -12,7 +13,7 @@
 |banner_scaletype|图片缩放类型|
 #### 依赖
 ```groovy
-implementation 'com.yey.bannery:library_banner:0.1.6'
+implementation 'com.yey.bannery:library_banner:0.1.7'
 ```
 #### XML布局使用
 ```xml

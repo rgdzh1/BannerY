@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -25,7 +26,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
-
 
 public class BannerY extends ConstraintLayout {
     private static final String TAG = BannerY.class.getSimpleName();
@@ -61,16 +61,24 @@ public class BannerY extends ConstraintLayout {
         super(context, attrs, defStyleAttr);
         initView(context);
         initXmlParams(context, attrs, defStyleAttr);
+        fixParams();
         initListener();
-        initData();
+        initLists();
         initImageLoader();
     }
 
+    /**
+     * 初始化ImageLoader
+     */
     private void initImageLoader() {
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(mContext));
     }
 
-
+    /**
+     * 将布局填充进BannerY,获取VP,TextView,LinearLayout控件
+     *
+     * @param context
+     */
     private void initView(Context context) {
         mContext = context;
         LayoutInflater.from(context).inflate(R.layout.layout_banner, this);
@@ -79,6 +87,13 @@ public class BannerY extends ConstraintLayout {
         mLLPoint = (LinearLayout) findViewById(R.id.ll_point);
     }
 
+    /**
+     * 获取自定义属性
+     *
+     * @param context
+     * @param attrs
+     * @param defStyleAttr
+     */
     private void initXmlParams(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BannerY, defStyleAttr, 0);
         mPointSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_size, 8);
@@ -90,12 +105,11 @@ public class BannerY extends ConstraintLayout {
         mDescSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_desc_size, 14);
         mScaleType = typedArray.getInt(R.styleable.BannerY_banner_scaletype, -1);
         typedArray.recycle();
-        fixParams();
     }
 
 
     /**
-     * 修正指示器和描述距离底部距离
+     * 通过自定义属性调整指示器与文字描述位置
      */
     private void fixParams() {
         //描述控件
@@ -110,12 +124,14 @@ public class BannerY extends ConstraintLayout {
         mLLPoint.setLayoutParams(mLLPointLayoutParams);
     }
 
-
+    /**
+     * 创建数据源集合以及创建Handler对象
+     */
     @SuppressLint("HandlerLeak")
-    private void initData() {
+    private void initLists() {
         mImageViewList = new ArrayList<>();
         mDescList = new ArrayList<>();
-        mHandler = new Handler() {
+        mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
@@ -127,6 +143,9 @@ public class BannerY extends ConstraintLayout {
 
     }
 
+    /**
+     * 为ViewPager设置滑动监听
+     */
     private void initListener() {
         mVp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -169,6 +188,7 @@ public class BannerY extends ConstraintLayout {
     }
 
     /**
+     * 设置图片源
      * @param imagesRes
      * @param <T>
      */
