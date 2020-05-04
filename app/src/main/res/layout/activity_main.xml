@@ -17,7 +17,7 @@
         app:desc_color="@color/colorAccent"
         app:desc_size="18sp"
         app:point_bottom_margin="10dp"
-        app:point_selecter="@drawable/point_selector_use"
+        app:point_bg="@drawable/point_selector_use"
         app:point_size="8dp" />
 
     <com.yey.library_banner.BannerY
@@ -31,7 +31,7 @@
         app:desc_color="@color/colorPrimaryDark"
         app:desc_size="10sp"
         app:point_bottom_margin="10dp"
-        app:point_selecter="@drawable/point_selector_use"
+        app:point_bg="@drawable/point_selector_use"
         app:point_size="4dp" />
 
 </LinearLayout>

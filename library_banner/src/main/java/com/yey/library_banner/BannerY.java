@@ -24,7 +24,6 @@ import com.nostra13.universalimageloader.BuildConfig;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 
@@ -37,7 +36,7 @@ public class BannerY extends ConstraintLayout {
     private ArrayList<ImageView> mImageViewList;
     private ArrayList<String> mDescList;
     private int mPointSize;
-    private int mPointSelecter;
+    private int mPointBG;
     private int mInterval;
 
     private BannerAdapter mBannerAdapter;
@@ -83,7 +82,7 @@ public class BannerY extends ConstraintLayout {
     private void initXmlParams(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BannerY, defStyleAttr, 0);
         mPointSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_size, 8);
-        mPointSelecter = typedArray.getResourceId(R.styleable.BannerY_point_selecter, R.drawable.point_selector);
+        mPointBG = typedArray.getResourceId(R.styleable.BannerY_point_bg, R.drawable.point_selector);
         mInterval = typedArray.getInteger(R.styleable.BannerY_banner_interval, 2000);
         mTvBottomMargin = typedArray.getDimensionPixelSize(R.styleable.BannerY_desc_bottom_margin, 8);
         mPointBottomMargin = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_bottom_margin, 8);
@@ -220,7 +219,7 @@ public class BannerY extends ConstraintLayout {
      */
     private void addPoint(int i) {
         ImageView point = new ImageView(mContext);
-        point.setImageResource(mPointSelecter);
+        point.setImageResource(mPointBG);
         LinearLayout.LayoutParams pointParams = new LinearLayout.LayoutParams(mPointSize, mPointSize);
         if (i == 0) {
             point.setEnabled(true);

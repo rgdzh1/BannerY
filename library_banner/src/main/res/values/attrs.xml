@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="BannerY">
         <attr name="point_size" format="dimension|reference" />
-        <attr name="point_selecter" format="reference" />
+        <attr name="point_bg" format="reference" />
         <attr name="point_bottom_margin" format="dimension|reference" />
         <attr name="desc_bottom_margin" format="dimension|reference" />
         <attr name="desc_color" format="color|reference" />
