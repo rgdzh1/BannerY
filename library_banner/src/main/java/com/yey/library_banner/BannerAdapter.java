@@ -33,7 +33,6 @@ public class BannerAdapter<T> extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         final int realPosition = position % mImageViewList.size();
-        //通过索引在这里取得图像,返回给ViewPager
         ImageView imageView = mImageViewList.get(realPosition);
         imageView.setTag(position);
         ViewParent viewParent = imageView.getParent();

@@ -232,7 +232,6 @@ public class BannerY extends ConstraintLayout {
         mLLPoint.addView(point);
     }
 
-
     /**
      * 初始化图片列表
      */
