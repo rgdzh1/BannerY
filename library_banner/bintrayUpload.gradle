@@ -31,9 +31,8 @@ def developerId = properties.getProperty("developer.id")
 def developerName = properties.getProperty("developer.name")
 def developerEmail = properties.getProperty("developer.email")
 
-def bintrayUser = properties.getProperty("bintray.user")
-def bintrayApikey = properties.getProperty("bintray.apiKey")
-//def bintrayOrganizationId = properties.getProperty("bintray.organizationId");
+def localUser = properties.getProperty("local.user")
+def localApikey = properties.getProperty("local.apiKey")
 
 def javadocName = properties.getProperty("javadoc.name")
 
@@ -108,8 +107,8 @@ javadoc {
 }
 
 bintray {
-    user = bintrayUser
-    key = bintrayApikey
+    user = localUser
+    key = localApikey
     configurations = ['archives']
     pkg {
         //userOrg = bintrayOrganizationId
