@@ -13,12 +13,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.nostra13.universalimageloader.BuildConfig;
@@ -27,7 +27,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 
-public class BannerY extends ConstraintLayout {
+public class BannerY extends FrameLayout {
     private static final String TAG = BannerY.class.getSimpleName();
     private ViewPager mVp;
     private TextView mTvDesc;
