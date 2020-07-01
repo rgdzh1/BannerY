@@ -31,8 +31,9 @@ def developerId = properties.getProperty("developer.id")
 def developerName = properties.getProperty("developer.name")
 def developerEmail = properties.getProperty("developer.email")
 
-def localUser = properties.getProperty("local.user")
-def localApikey = properties.getProperty("local.apiKey")
+def bintrayUser = properties.getProperty("bintray.user")
+def bintrayApikey = properties.getProperty("bintray.apiKey")
+//def bintrayOrganizationId = properties.getProperty("bintray.organizationId");
 
 def javadocName = properties.getProperty("javadoc.name")
 
@@ -89,6 +90,13 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+// 处理javadoc打包的时候报错,配置这段很好用
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
 artifacts {
     archives javadocJar
     archives sourcesJar
@@ -107,8 +115,8 @@ javadoc {
 }
 
 bintray {
-    user = localUser
-    key = localApikey
+    user = bintrayUser
+    key = bintrayApikey
     configurations = ['archives']
     pkg {
         //userOrg = bintrayOrganizationId

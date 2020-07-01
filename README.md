@@ -13,7 +13,7 @@
 |banner_scaletype|图片缩放类型|
 #### 依赖
 ```groovy
-implementation 'com.yey.bannery:library_banner:0.1.9'
+implementation 'com.yey.bannery:library_banner:0.2.0'
 ```
 #### XML布局使用
 ```xml

@@ -1,6 +1,7 @@
 package com.yey.library_banner;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -49,15 +50,15 @@ public class BannerY extends FrameLayout {
     private Handler mHandler;
     private int mScaleType;
 
-    public BannerY(Context context) {
+    public BannerY(Context context) throws Throwable {
         this(context, null);
     }
 
-    public BannerY(Context context, AttributeSet attrs) {
+    public BannerY(Context context, AttributeSet attrs) throws Throwable {
         this(context, attrs, 0);
     }
 
-    public BannerY(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BannerY(Context context, AttributeSet attrs, int defStyleAttr) throws Throwable {
         super(context, attrs, defStyleAttr);
         initView(context);
         initXmlParams(context, attrs, defStyleAttr);
@@ -65,6 +66,20 @@ public class BannerY extends FrameLayout {
         initListener();
         initLists();
         initImageLoader();
+        initLifecycler();
+    }
+
+    /**
+     * BannerY 关联Activity的生命周期
+     */
+    private void initLifecycler() throws Throwable {
+        Activity activityFromView = ContextUtils.getActivityFromView(this);
+        if (activityFromView != null) {
+            ReportFragment fragment = (ReportFragment) ReportFragment.injectIfNeededIn(activityFromView);
+            fragment.setHandler(mHandler);
+        } else {
+            throw new Throwable("BannerY获取到的Activity不能为null");
+        }
     }
 
     /**
@@ -189,6 +204,7 @@ public class BannerY extends FrameLayout {
 
     /**
      * 设置图片源
+     *
      * @param imagesRes
      * @param <T>
      */
@@ -203,8 +219,8 @@ public class BannerY extends FrameLayout {
             //设置中间位置
             int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageViewList.size();//要保证imageViews的整数倍
             mVp.setCurrentItem(position);
-            //发消息
-            mHandler.sendEmptyMessageDelayed(1, mInterval);
+            //最开始发消息
+            // mHandler.sendEmptyMessageDelayed(1, mInterval);
             if (mDescList.size() == mImageViewList.size()) {
                 mTvDesc.setText(mDescList.get(prePosition));
             }
@@ -250,6 +266,7 @@ public class BannerY extends FrameLayout {
         point.setLayoutParams(pointParams);
         mLLPoint.addView(point);
     }
+
 
     /**
      * 初始化图片列表
@@ -360,8 +377,5 @@ public class BannerY extends FrameLayout {
         if (com.yey.library_banner.BuildConfig.DEBUG) {
             Log.e(TAG, " 旋转屏幕执行该方法");
         }
-        // 防止内存泄漏
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler = null;
     }
 }
