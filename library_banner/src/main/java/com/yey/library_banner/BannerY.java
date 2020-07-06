@@ -363,7 +363,12 @@ public class BannerY extends FrameLayout {
             public void onClick(View v) {
                 if (mIClickBanner != null) {
                     int positon = (int) v.getTag();
-                    int i = positon % mImageViewList.size();
+                    //选中该图时
+                    int mResListSize = mImageViewList.size();
+                    if (isDoubleRes) {
+                        mResListSize = mResListSize / 2;
+                    }
+                    int i = positon % mResListSize;
                     mIClickBanner.click(i);
                 } else {
                     if (BuildConfig.DEBUG) {
