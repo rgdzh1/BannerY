@@ -11,13 +11,14 @@
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        app:banner_im_scaletype="centerInside"
         app:banner_interval="2000"
-        app:banner_scaletype="centerInside"
         app:desc_bottom_margin="10dp"
         app:desc_color="@color/colorAccent"
         app:desc_size="18sp"
-        app:point_bottom_margin="10dp"
         app:point_bg="@drawable/point_selector_use"
+        app:point_bottom_margin="10dp"
+        app:banner_size_sclae="15dp"
         app:point_size="8dp" />
 
     <com.yey.library_banner.BannerY
@@ -25,13 +26,14 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="24dp"
+        app:banner_im_scaletype="centerCrop"
         app:banner_interval="3000"
-        app:banner_scaletype="centerCrop"
+        app:banner_size_sclae="15dp"
         app:desc_bottom_margin="40dp"
         app:desc_color="@color/colorPrimaryDark"
         app:desc_size="10sp"
-        app:point_bottom_margin="10dp"
         app:point_bg="@drawable/point_selector_use"
+        app:point_bottom_margin="10dp"
         app:point_size="4dp" />
 
 </LinearLayout>

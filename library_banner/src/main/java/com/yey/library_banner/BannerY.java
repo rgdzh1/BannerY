@@ -48,7 +48,8 @@ public class BannerY extends FrameLayout {
     private int mDescColor;
     private float mDescSize;
     private Handler mHandler;
-    private int mScaleType;
+    private int mImageScaleType;
+    private int mBannerScaleSize;
 
     public BannerY(Context context) throws Throwable {
         this(context, null);
@@ -118,13 +119,16 @@ public class BannerY extends FrameLayout {
         mPointBottomMargin = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_bottom_margin, 8);
         mDescColor = typedArray.getColor(R.styleable.BannerY_desc_color, Color.BLACK);
         mDescSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_desc_size, 14);
-        mScaleType = typedArray.getInt(R.styleable.BannerY_banner_scaletype, -1);
+        mImageScaleType = typedArray.getInt(R.styleable.BannerY_banner_im_scaletype, -1);
+        // 图片padding值
+        mBannerScaleSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_banner_size_sclae, 0);
         typedArray.recycle();
     }
 
 
     /**
      * 通过自定义属性调整指示器与文字描述位置
+     *
      */
     private void fixParams() {
         //描述控件
@@ -137,6 +141,11 @@ public class BannerY extends FrameLayout {
         LayoutParams mLLPointLayoutParams = (LayoutParams) mLLPoint.getLayoutParams();
         mLLPointLayoutParams.bottomMargin = (int) mPointBottomMargin;
         mLLPoint.setLayoutParams(mLLPointLayoutParams);
+        // ViewPager 设置页面向内缩放 https://blog.csdn.net/u013823101/article/details/104497998/
+        // 设置ViewPager向内缩小的距离
+        mVp.setPadding(mBannerScaleSize, 0, mBannerScaleSize, 0);
+        // 使ViewPager不在Padding区域中绘制,这样ViewPager一个界面可以看到3张图.
+        mVp.setClipToPadding(false);
     }
 
     /**
@@ -335,7 +344,7 @@ public class BannerY extends FrameLayout {
         ImageView imageView = new ImageView(mContext);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(layoutParams);
-        ImageView.ScaleType scaleType = sScaleTypeArray[mScaleType];
+        ImageView.ScaleType scaleType = sScaleTypeArray[mImageScaleType];
         imageView.setScaleType(scaleType);
         if (imageResClass.equals(String.class)) {
             String url = (String) imagesRes.get(i);
@@ -344,6 +353,10 @@ public class BannerY extends FrameLayout {
             Integer resId = (Integer) imagesRes.get(i);
             imageView.setImageResource(resId);
         }
+        // 图片的padding值要比ViewPager Padding值小,如果图片Padding值比ViewPager Padding值还要大,
+        // ViewPager就不能在一个界面中展示三张图了.
+        // (mBannerScaleSize*0.8): 代表了图片间的空白区域大小
+        imageView.setPadding((int) (mBannerScaleSize*0.3), 0, (int) (mBannerScaleSize*0.3), 0);
         return imageView;
     }
 
