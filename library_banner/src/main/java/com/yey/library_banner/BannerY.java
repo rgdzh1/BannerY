@@ -128,7 +128,6 @@ public class BannerY extends FrameLayout {
 
     /**
      * 通过自定义属性调整指示器与文字描述位置
-     *
      */
     private void fixParams() {
         //描述控件
@@ -220,8 +219,12 @@ public class BannerY extends FrameLayout {
     public <T> void setImagesRes(ArrayList<T> imagesRes) {
         if (judgeLenght(imagesRes)) {
             mImageViewList.clear();
+            if (imagesRes.size() <= 3) {
+                // 如果原始数据小于或等于3,那么就添加双份图片.
+                initImageList(imagesRes, false);
+            }
             // 初始化图片列表
-            initImageList(imagesRes);
+            initImageList(imagesRes, true);
             // 创建Adapter
             mBannerAdapter = new BannerAdapter(mImageViewList);
             mVp.setAdapter(mBannerAdapter);
@@ -279,8 +282,11 @@ public class BannerY extends FrameLayout {
 
     /**
      * 初始化图片列表
+     *
+     * @param imagesRes
+     * @param isAddPoint 是否添加指示器,当第二次添加指示器的时候应该拒绝
      */
-    private void initImageList(ArrayList imagesRes) {
+    private void initImageList(ArrayList imagesRes, boolean isAddPoint) {
         Class<?> imageResClass = imagesRes.get(0).getClass();
         for (int i = 0; i < imagesRes.size(); i++) {
             // 创建ImageView
@@ -290,7 +296,9 @@ public class BannerY extends FrameLayout {
             // 将ImageView添加进集合中
             mImageViewList.add(imageView);
             //添加指示器
-            addPoint(i);
+            if (isAddPoint) {
+                addPoint(i);
+            }
         }
     }
 
@@ -356,7 +364,7 @@ public class BannerY extends FrameLayout {
         // 图片的padding值要比ViewPager Padding值小,如果图片Padding值比ViewPager Padding值还要大,
         // ViewPager就不能在一个界面中展示三张图了.
         // (mBannerScaleSize*0.8): 代表了图片间的空白区域大小
-        imageView.setPadding((int) (mBannerScaleSize*0.3), 0, (int) (mBannerScaleSize*0.3), 0);
+        imageView.setPadding((int) (mBannerScaleSize * 0.3), 0, (int) (mBannerScaleSize * 0.3), 0);
         return imageView;
     }
 
