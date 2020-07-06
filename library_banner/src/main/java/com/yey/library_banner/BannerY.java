@@ -220,7 +220,7 @@ public class BannerY extends FrameLayout {
         if (judgeLenght(imagesRes)) {
             mImageViewList.clear();
             if (imagesRes.size() <= 3) {
-                // 如果原始数据小于或等于3,那么就添加双份图片.
+                // 如果原始数据小于或等于3,那么就添加双份图片.这样可以防止白屏现象
                 initImageList(imagesRes, false);
             }
             // 初始化图片列表
