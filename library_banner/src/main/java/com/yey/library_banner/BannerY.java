@@ -179,10 +179,7 @@ public class BannerY extends FrameLayout {
             @Override
             public void onPageSelected(int position) {
                 //选中该图时
-                int mResListSize = mImageViewList.size();
-                if (isDoubleRes) {
-                    mResListSize = mResListSize / 2;
-                }
+                int mResListSize = getmResListSize();
                 int realPosition = position % mResListSize;
                 refreshDesc(realPosition);
                 refreshPosition(realPosition);
@@ -364,10 +361,7 @@ public class BannerY extends FrameLayout {
                 if (mIClickBanner != null) {
                     int positon = (int) v.getTag();
                     //选中该图时
-                    int mResListSize = mImageViewList.size();
-                    if (isDoubleRes) {
-                        mResListSize = mResListSize / 2;
-                    }
+                    int mResListSize = getmResListSize();
                     int i = positon % mResListSize;
                     mIClickBanner.click(i);
                 } else {
@@ -377,6 +371,19 @@ public class BannerY extends FrameLayout {
                 }
             }
         });
+    }
+
+    /**
+     * 获取当前资源List的真实索引长度
+     *
+     * @return
+     */
+    private int getmResListSize() {
+        int mResListSize = mImageViewList.size();
+        if (isDoubleRes) {
+            mResListSize = mResListSize / 2;
+        }
+        return mResListSize;
     }
 
     /**
