@@ -179,15 +179,46 @@ public class BannerY extends FrameLayout {
             @Override
             public void onPageSelected(int position) {
                 //选中该图时
-                int realPosition = position % mImageViewList.size();
-                if (mDescList.size() == mImageViewList.size()) {
-                    String desc = mDescList.get(realPosition);
-                    mTvDesc.setText(desc);
+                int mResListSize = mImageViewList.size();
+                if (isDoubleRes) {
+                    mResListSize = mResListSize / 2;
+                }
+                int realPosition = position % mResListSize;
+                refreshDesc(realPosition);
+                refreshPosition(realPosition);
+            }
+
+            /**
+             * 刷新描述
+             * @param realPosition
+             */
+            private void refreshDesc(int realPosition) {
+                if (isDoubleRes) {
+                    if (mDescList.size() == mImageViewList.size() / 2) {
+                        String desc = mDescList.get(realPosition);
+                        mTvDesc.setText(desc);
+                    } else {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "文字集合和图片集合长度不相等");
+                        }
+                    }
                 } else {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "文字集合和图片集合长度不相等");
+                    if (mDescList.size() == mImageViewList.size()) {
+                        String desc = mDescList.get(realPosition);
+                        mTvDesc.setText(desc);
+                    } else {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "文字集合和图片集合长度不相等");
+                        }
                     }
                 }
+            }
+
+            /**
+             *  刷新指示器
+             * @param realPosition
+             */
+            private void refreshPosition(int realPosition) {
                 mLLPoint.getChildAt(prePosition).setEnabled(false);
                 mLLPoint.getChildAt(realPosition).setEnabled(true);
                 prePosition = realPosition;
@@ -216,12 +247,15 @@ public class BannerY extends FrameLayout {
      * @param imagesRes
      * @param <T>
      */
+    private boolean isDoubleRes; // 是否需要加入双倍图片,用以防止白屏现象
+
     public <T> void setImagesRes(ArrayList<T> imagesRes) {
         if (judgeLenght(imagesRes)) {
             mImageViewList.clear();
             if (imagesRes.size() <= 3) {
                 // 如果原始数据小于或等于3,那么就添加双份图片.这样可以防止白屏现象
                 initImageList(imagesRes, false);
+                isDoubleRes = true;
             }
             // 初始化图片列表
             initImageList(imagesRes, true);
@@ -284,7 +318,7 @@ public class BannerY extends FrameLayout {
      * 初始化图片列表
      *
      * @param imagesRes
-     * @param isAddPoint 是否添加指示器,当第二次添加指示器的时候应该拒绝
+     * @param isAddPoint 是否添加指示器
      */
     private void initImageList(ArrayList imagesRes, boolean isAddPoint) {
         Class<?> imageResClass = imagesRes.get(0).getClass();
@@ -295,7 +329,7 @@ public class BannerY extends FrameLayout {
             setImageViewListener(imageView);
             // 将ImageView添加进集合中
             mImageViewList.add(imageView);
-            //添加指示器
+            // 图片是双倍,但是指示器不用加双倍
             if (isAddPoint) {
                 addPoint(i);
             }
