@@ -1,14 +1,14 @@
 package com.yey.library_banner;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+
 import java.util.ArrayList;
 
 public class BannerAdapter<T> extends PagerAdapter {

@@ -5,10 +5,11 @@
         <attr name="point_bg" format="reference" />
         <attr name="point_bottom_margin" format="dimension|reference" />
         <attr name="desc_bottom_margin" format="dimension|reference" />
+        <attr name="banner_size_sclae" format="dimension|reference" />
         <attr name="desc_color" format="color|reference" />
         <attr name="desc_size" format="dimension|reference" />
         <attr name="banner_interval" format="integer" />
-        <attr name="banner_scaletype">
+        <attr name="banner_im_scaletype">
             <enum name="matrix" value="0" />
             <enum name="fitXY" value="1" />
             <enum name="fitStart" value="2" />

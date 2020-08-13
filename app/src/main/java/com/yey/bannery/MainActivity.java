@@ -52,11 +52,9 @@ public class MainActivity extends AppCompatActivity {
         strings.add("111111111");
         strings.add("222222222");
         strings.add("333333333");
-        strings.add("444444444");
-        integers.add(R.mipmap.banner_1);
-        integers.add(R.mipmap.banner_2);
-        integers.add(R.mipmap.banner_3);
-        integers.add(R.mipmap.banner_4);
+        integers.add(R.mipmap.home_banner_1);
+        integers.add(R.mipmap.home_banner_2);
+        integers.add(R.mipmap.home_banner_3);
         bannerY.setImagesRes(integers);
         bannerY.setDescList(strings);
         bannerY.setClickBanner(new IClickBanner() {

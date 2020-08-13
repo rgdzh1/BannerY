@@ -1,6 +1,7 @@
 package com.yey.library_banner;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -13,12 +14,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.nostra13.universalimageloader.BuildConfig;
@@ -27,7 +28,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 
-public class BannerY extends ConstraintLayout {
+public class BannerY extends FrameLayout {
     private static final String TAG = BannerY.class.getSimpleName();
     private ViewPager mVp;
     private TextView mTvDesc;
@@ -47,17 +48,18 @@ public class BannerY extends ConstraintLayout {
     private int mDescColor;
     private float mDescSize;
     private Handler mHandler;
-    private int mScaleType;
+    private int mImageScaleType;
+    private int mBannerScaleSize;
 
-    public BannerY(Context context) {
+    public BannerY(Context context) throws Throwable {
         this(context, null);
     }
 
-    public BannerY(Context context, AttributeSet attrs) {
+    public BannerY(Context context, AttributeSet attrs) throws Throwable {
         this(context, attrs, 0);
     }
 
-    public BannerY(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BannerY(Context context, AttributeSet attrs, int defStyleAttr) throws Throwable {
         super(context, attrs, defStyleAttr);
         initView(context);
         initXmlParams(context, attrs, defStyleAttr);
@@ -65,6 +67,20 @@ public class BannerY extends ConstraintLayout {
         initListener();
         initLists();
         initImageLoader();
+        initLifecycler();
+    }
+
+    /**
+     * BannerY 关联Activity的生命周期
+     */
+    private void initLifecycler() throws Throwable {
+        Activity activityFromView = ContextUtils.getActivityFromView(this);
+        if (activityFromView != null) {
+            BannerYFragment fragment = (BannerYFragment) BannerYFragment.injectIfNeededIn(activityFromView);
+            fragment.setHandler(mHandler);
+        } else {
+            throw new Throwable("BannerY获取到的Activity不能为null");
+        }
     }
 
     /**
@@ -103,7 +119,9 @@ public class BannerY extends ConstraintLayout {
         mPointBottomMargin = typedArray.getDimensionPixelSize(R.styleable.BannerY_point_bottom_margin, 8);
         mDescColor = typedArray.getColor(R.styleable.BannerY_desc_color, Color.BLACK);
         mDescSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_desc_size, 14);
-        mScaleType = typedArray.getInt(R.styleable.BannerY_banner_scaletype, -1);
+        mImageScaleType = typedArray.getInt(R.styleable.BannerY_banner_im_scaletype, -1);
+        // 图片padding值
+        mBannerScaleSize = typedArray.getDimensionPixelSize(R.styleable.BannerY_banner_size_sclae, 0);
         typedArray.recycle();
     }
 
@@ -122,6 +140,11 @@ public class BannerY extends ConstraintLayout {
         LayoutParams mLLPointLayoutParams = (LayoutParams) mLLPoint.getLayoutParams();
         mLLPointLayoutParams.bottomMargin = (int) mPointBottomMargin;
         mLLPoint.setLayoutParams(mLLPointLayoutParams);
+        // ViewPager 设置页面向内缩放 https://blog.csdn.net/u013823101/article/details/104497998/
+        // 设置ViewPager向内缩小的距离
+        mVp.setPadding(mBannerScaleSize, 0, mBannerScaleSize, 0);
+        // 使ViewPager不在Padding区域中绘制,这样ViewPager一个界面可以看到3张图.
+        mVp.setClipToPadding(false);
     }
 
     /**
@@ -156,15 +179,43 @@ public class BannerY extends ConstraintLayout {
             @Override
             public void onPageSelected(int position) {
                 //选中该图时
-                int realPosition = position % mImageViewList.size();
-                if (mDescList.size() == mImageViewList.size()) {
-                    String desc = mDescList.get(realPosition);
-                    mTvDesc.setText(desc);
+                int mResListSize = getmResListSize();
+                int realPosition = position % mResListSize;
+                refreshDesc(realPosition);
+                refreshPosition(realPosition);
+            }
+
+            /**
+             * 刷新描述
+             * @param realPosition
+             */
+            private void refreshDesc(int realPosition) {
+                if (isDoubleRes) {
+                    if (mDescList.size() == mImageViewList.size() / 2) {
+                        String desc = mDescList.get(realPosition);
+                        mTvDesc.setText(desc);
+                    } else {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "文字集合和图片集合长度不相等");
+                        }
+                    }
                 } else {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "文字集合和图片集合长度不相等");
+                    if (mDescList.size() == mImageViewList.size()) {
+                        String desc = mDescList.get(realPosition);
+                        mTvDesc.setText(desc);
+                    } else {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "文字集合和图片集合长度不相等");
+                        }
                     }
                 }
+            }
+
+            /**
+             *  刷新指示器
+             * @param realPosition
+             */
+            private void refreshPosition(int realPosition) {
                 mLLPoint.getChildAt(prePosition).setEnabled(false);
                 mLLPoint.getChildAt(realPosition).setEnabled(true);
                 prePosition = realPosition;
@@ -189,22 +240,30 @@ public class BannerY extends ConstraintLayout {
 
     /**
      * 设置图片源
+     *
      * @param imagesRes
      * @param <T>
      */
+    private boolean isDoubleRes; // 是否需要加入双倍图片,用以防止白屏现象
+
     public <T> void setImagesRes(ArrayList<T> imagesRes) {
         if (judgeLenght(imagesRes)) {
             mImageViewList.clear();
+            if (imagesRes.size() <= 3) {
+                // 如果原始数据小于或等于3,那么就添加双份图片.这样可以防止白屏现象
+                initImageList(imagesRes, false);
+                isDoubleRes = true;
+            }
             // 初始化图片列表
-            initImageList(imagesRes);
+            initImageList(imagesRes, true);
             // 创建Adapter
             mBannerAdapter = new BannerAdapter(mImageViewList);
             mVp.setAdapter(mBannerAdapter);
             //设置中间位置
             int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageViewList.size();//要保证imageViews的整数倍
             mVp.setCurrentItem(position);
-            //发消息
-            mHandler.sendEmptyMessageDelayed(1, mInterval);
+            //最开始发消息
+            // mHandler.sendEmptyMessageDelayed(1, mInterval);
             if (mDescList.size() == mImageViewList.size()) {
                 mTvDesc.setText(mDescList.get(prePosition));
             }
@@ -251,10 +310,14 @@ public class BannerY extends ConstraintLayout {
         mLLPoint.addView(point);
     }
 
+
     /**
      * 初始化图片列表
+     *
+     * @param imagesRes
+     * @param isAddPoint 是否添加指示器
      */
-    private void initImageList(ArrayList imagesRes) {
+    private void initImageList(ArrayList imagesRes, boolean isAddPoint) {
         Class<?> imageResClass = imagesRes.get(0).getClass();
         for (int i = 0; i < imagesRes.size(); i++) {
             // 创建ImageView
@@ -263,8 +326,10 @@ public class BannerY extends ConstraintLayout {
             setImageViewListener(imageView);
             // 将ImageView添加进集合中
             mImageViewList.add(imageView);
-            //添加指示器
-            addPoint(i);
+            // 图片是双倍,但是指示器不用加双倍
+            if (isAddPoint) {
+                addPoint(i);
+            }
         }
     }
 
@@ -295,7 +360,9 @@ public class BannerY extends ConstraintLayout {
             public void onClick(View v) {
                 if (mIClickBanner != null) {
                     int positon = (int) v.getTag();
-                    int i = positon % mImageViewList.size();
+                    //选中该图时
+                    int mResListSize = getmResListSize();
+                    int i = positon % mResListSize;
                     mIClickBanner.click(i);
                 } else {
                     if (BuildConfig.DEBUG) {
@@ -304,6 +371,19 @@ public class BannerY extends ConstraintLayout {
                 }
             }
         });
+    }
+
+    /**
+     * 获取当前资源List的真实索引长度
+     *
+     * @return
+     */
+    private int getmResListSize() {
+        int mResListSize = mImageViewList.size();
+        if (isDoubleRes) {
+            mResListSize = mResListSize / 2;
+        }
+        return mResListSize;
     }
 
     /**
@@ -318,7 +398,7 @@ public class BannerY extends ConstraintLayout {
         ImageView imageView = new ImageView(mContext);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(layoutParams);
-        ImageView.ScaleType scaleType = sScaleTypeArray[mScaleType];
+        ImageView.ScaleType scaleType = sScaleTypeArray[mImageScaleType];
         imageView.setScaleType(scaleType);
         if (imageResClass.equals(String.class)) {
             String url = (String) imagesRes.get(i);
@@ -327,6 +407,10 @@ public class BannerY extends ConstraintLayout {
             Integer resId = (Integer) imagesRes.get(i);
             imageView.setImageResource(resId);
         }
+        // 图片的padding值要比ViewPager Padding值小,如果图片Padding值比ViewPager Padding值还要大,
+        // ViewPager就不能在一个界面中展示三张图了.
+        // (mBannerScaleSize*0.8): 代表了图片间的空白区域大小
+        imageView.setPadding((int) (mBannerScaleSize * 0.3), 0, (int) (mBannerScaleSize * 0.3), 0);
         return imageView;
     }
 
@@ -360,8 +444,5 @@ public class BannerY extends ConstraintLayout {
         if (com.yey.library_banner.BuildConfig.DEBUG) {
             Log.e(TAG, " 旋转屏幕执行该方法");
         }
-        // 防止内存泄漏
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler = null;
     }
 }

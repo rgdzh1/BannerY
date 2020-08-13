@@ -10,10 +10,11 @@
 |desc_color|文字描述的文字颜色|
 |desc_size|文字描述的文字大小|
 |banner_interval|切换图片间隔时间|
-|banner_scaletype|图片缩放类型|
+|banner_im_scaletype|图片缩放类型|
+|banner_size_sclae|图片两边增加Padding,一个页面可以看到3张Banner图|
 #### 依赖
 ```groovy
-implementation 'com.yey.bannery:library_banner:0.1.8'
+implementation 'com.yey.bannery:library_banner:0.2.6'
 ```
 #### XML布局使用
 ```xml
