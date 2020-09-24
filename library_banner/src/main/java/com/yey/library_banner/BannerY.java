@@ -76,8 +76,8 @@ public class BannerY extends FrameLayout {
     private void initLifecycler() throws Throwable {
         Activity activityFromView = ContextUtils.getActivityFromView(this);
         if (activityFromView != null) {
-            BannerYFragment fragment = (BannerYFragment) BannerYFragment.injectIfNeededIn(activityFromView);
-            fragment.setHandler(mHandler);
+            BannerYFragment fragment = (BannerYFragment) BannerYFragment.injectIfNeededIn(activityFromView,mHandler);
+//            fragment.setHandler(mHandler);
         } else {
             throw new Throwable("BannerY获取到的Activity不能为null");
         }
