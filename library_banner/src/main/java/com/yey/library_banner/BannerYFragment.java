@@ -2,6 +2,7 @@ package com.yey.library_banner;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Handler;
 import android.util.Log;
 
@@ -10,19 +11,14 @@ public class BannerYFragment extends Fragment {
     private final String TAG = this.getClass().getName();
     private static Handler mHandler;
 
-    public static Fragment injectIfNeededIn(Activity activity, Handler handler) {
+    public static void injectIfNeededIn(Activity activity, Handler handler) {
         mHandler = handler;
-        android.app.FragmentManager manager = activity.getFragmentManager();
+        FragmentManager manager = activity.getFragmentManager();
         if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
             manager.beginTransaction().add(new BannerYFragment(), REPORT_FRAGMENT_TAG).commit();
             manager.executePendingTransactions();
         }
-        return manager.findFragmentByTag(REPORT_FRAGMENT_TAG);
     }
-
-//    public void setHandler(Handler mHandler) {
-//        this.mHandler = mHandler;
-//    }
 
     @Override
     public void onResume() {
