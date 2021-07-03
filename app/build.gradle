@@ -27,8 +27,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    // implementation project(path: ':library_banner')
-    implementation 'com.github.rgdzh1:BannerY:0.2.7'
+    implementation project(path: ':library_banner')
+    // implementation 'com.github.rgdzh1:BannerY:0.2.7'
 
     //leakcanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'

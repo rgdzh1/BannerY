@@ -110,3 +110,5 @@ bannerY.setClickBanner(new IClickBanner() {
     }
 });
 ```
+#### DEMO下载
+<img src="下载.png" style="zoom:50%">
