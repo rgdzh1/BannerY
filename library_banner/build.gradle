@@ -9,7 +9,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 29
         versionCode 1
-        versionName "0.2.6"
+        versionName "0.2.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -46,7 +46,3 @@ dependencies {
     api 'androidx.viewpager:viewpager:1.0.0'
     api files('libs\\universal-image-loader-1.9.5.jar')
 }
-
-//必须放这里,不然提示这个错误
-//Caused by: java.lang.NullPointerException: android.compileSdkVersion is missing!
-apply from: "bintrayUpload.gradle"

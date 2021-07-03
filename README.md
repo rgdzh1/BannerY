@@ -14,7 +14,16 @@
 |banner_size_sclae|图片两边增加Padding,一个页面可以看到3张Banner图|
 #### 依赖
 ```groovy
-implementation 'com.yey.bannery:library_banner:0.2.6'
+// 1.
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+// 2.
+dependencies {
+    implementation 'com.github.rgdzh1:BannerY:0.2.7'
+}
 ```
 #### XML布局使用
 ```xml
