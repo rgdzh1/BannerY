@@ -76,8 +76,9 @@ public class BannerY extends FrameLayout {
     private void initLifecycler() throws Throwable {
         Activity activityFromView = ContextUtils.getActivityFromView(this);
         if (activityFromView != null) {
-            BannerYFragment fragment = (BannerYFragment) BannerYFragment.injectIfNeededIn(activityFromView);
-            fragment.setHandler(mHandler);
+//            BannerYFragment fragment = (BannerYFragment) BannerYFragment.injectIfNeededIn(activityFromView, mHandler);
+//            fragment.setHandler(mHandler);
+            BannerYFragment.injectIfNeededIn(activityFromView, mHandler);
         } else {
             throw new Throwable("BannerY获取到的Activity不能为null");
         }
@@ -263,7 +264,8 @@ public class BannerY extends FrameLayout {
             int position = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mImageViewList.size();//要保证imageViews的整数倍
             mVp.setCurrentItem(position);
             //最开始发消息
-            // mHandler.sendEmptyMessageDelayed(1, mInterval);
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler.sendEmptyMessageDelayed(1, mInterval);
             if (mDescList.size() == mImageViewList.size()) {
                 mTvDesc.setText(mDescList.get(prePosition));
             }

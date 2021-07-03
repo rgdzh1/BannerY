@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <com.yey.library_banner.BannerY
-        android:id="@+id/banner"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:banner_im_scaletype="centerInside"
-        app:banner_interval="2000"
-        app:banner_size_sclae="5dp"
-        app:desc_bottom_margin="10dp"
-        app:desc_color="@color/colorAccent"
-        app:desc_size="18sp"
-        app:point_bg="@drawable/point_selector_use"
-        app:point_bottom_margin="10dp"
-        app:point_size="8dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <com.yey.library_banner.BannerY
-        android:id="@+id/banner2"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="24dp"
-        app:banner_im_scaletype="centerCrop"
-        app:banner_interval="3000"
-        app:banner_size_sclae="15dp"
-        app:desc_bottom_margin="40dp"
-        app:desc_color="@color/colorPrimaryDark"
-        app:desc_size="10sp"
-        app:point_bg="@drawable/point_selector_use"
-        app:point_bottom_margin="10dp"
-        app:point_size="4dp" />
+        <com.yey.library_banner.BannerY
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:banner_im_scaletype="centerInside"
+            app:banner_interval="2000"
+            app:banner_size_sclae="5dp"
+            app:desc_bottom_margin="10dp"
+            app:desc_color="@color/colorAccent"
+            app:desc_size="18sp"
+            app:point_bg="@drawable/point_selector_use"
+            app:point_bottom_margin="10dp"
+            app:point_size="8dp" />
 
-</LinearLayout>
+        <com.yey.library_banner.BannerY
+            android:id="@+id/banner2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="600dp"
+            app:banner_im_scaletype="centerCrop"
+            app:banner_interval="3000"
+            app:banner_size_sclae="15dp"
+            app:desc_bottom_margin="40dp"
+            app:desc_color="@color/colorPrimaryDark"
+            app:desc_size="10sp"
+            app:point_bg="@drawable/point_selector_use"
+            app:point_bottom_margin="10dp"
+            app:point_size="4dp" />
+
+    </LinearLayout>
+</ScrollView>
