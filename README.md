@@ -23,7 +23,8 @@ allprojects {
 }
 // 2.
 dependencies {
-    implementation 'com.github.rgdzh1:BannerY:0.2.8'
+    // 将TAG替换为最新的版本号,例如 implementation 'com.github.rgdzh1:BannerY:0.2.8'
+    implementation 'com.github.rgdzh1:BannerY:TAG'
 }
 ```
 #### XML布局使用
