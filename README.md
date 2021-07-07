@@ -1,4 +1,5 @@
 # BannerY
+[![](https://jitpack.io/v/rgdzh1/BannerY.svg)](https://jitpack.io/#rgdzh1/BannerY)
 > [原理介绍](https://blog.csdn.net/MoLiao2046/article/details/105918542)
 #### 属性介绍
 | 属性 |   解释   |
@@ -22,7 +23,7 @@ allprojects {
 }
 // 2.
 dependencies {
-    implementation 'com.github.rgdzh1:BannerY:0.2.7'
+    implementation 'com.github.rgdzh1:BannerY:0.2.8'
 }
 ```
 #### XML布局使用
