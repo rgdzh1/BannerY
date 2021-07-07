@@ -26,6 +26,7 @@ import com.nostra13.universalimageloader.BuildConfig;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import java.security.PrivateKey;
 import java.util.ArrayList;
 
 public class BannerY extends FrameLayout {
@@ -33,7 +34,7 @@ public class BannerY extends FrameLayout {
     private ViewPager mVp;
     private TextView mTvDesc;
     private LinearLayout mLLPoint;
-    Context mContext;
+    private Context mContext;
     private ArrayList<ImageView> mImageViewList;
     private ArrayList<String> mDescList;
     private int mPointSize;
@@ -76,9 +77,9 @@ public class BannerY extends FrameLayout {
     private void initLifecycler() throws Throwable {
         Activity activityFromView = ContextUtils.getActivityFromView(this);
         if (activityFromView != null) {
-//            BannerYFragment fragment = (BannerYFragment) BannerYFragment.injectIfNeededIn(activityFromView, mHandler);
-//            fragment.setHandler(mHandler);
-            BannerYFragment.injectIfNeededIn(activityFromView, mHandler);
+            BannerYFragment fragment = BannerYFragment.injectIfNeededIn(activityFromView);
+            fragment.setHandler(mHandler);
+//            BannerYFragment.injectIfNeededIn(activityFromView, mHandler);
         } else {
             throw new Throwable("BannerY获取到的Activity不能为null");
         }
@@ -441,10 +442,19 @@ public class BannerY extends FrameLayout {
     };
 
     @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (com.yey.library_banner.BuildConfig.DEBUG) {
-            Log.e(TAG, " 旋转屏幕执行该方法");
+        if (mHandler != null) {
+            // 防止内存泄漏
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
         }
     }
+
 }

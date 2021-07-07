@@ -7,17 +7,19 @@ import android.os.Handler;
 import android.util.Log;
 
 public class BannerYFragment extends Fragment {
-    private static final String REPORT_FRAGMENT_TAG = "com.ye.bannerY.report_fragment_tag";
-    private final String TAG = this.getClass().getName();
-    private static Handler mHandler;
+    private Handler mHandler;
 
-    public static void injectIfNeededIn(Activity activity, Handler handler) {
-        mHandler = handler;
+    public static BannerYFragment injectIfNeededIn(Activity activity) {
         FragmentManager manager = activity.getFragmentManager();
-        if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
-            manager.beginTransaction().add(new BannerYFragment(), REPORT_FRAGMENT_TAG).commit();
+        if (manager.findFragmentByTag(BannerYFragment.class.getName()) == null) {
+            manager.beginTransaction().add(new BannerYFragment(), BannerYFragment.class.getName()).commit();
             manager.executePendingTransactions();
         }
+        return (BannerYFragment) manager.findFragmentByTag(BannerYFragment.class.getName());
+    }
+
+    public void setHandler(Handler mHandler) {
+        this.mHandler = mHandler;
     }
 
     @Override
@@ -40,10 +42,20 @@ public class BannerYFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         if (mHandler != null) {
+            // 防止内存泄漏
             mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
         }
     }
+
+    //    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        if (mHandler != null) {
+//            mHandler.removeCallbacksAndMessages(null);
+//        }
+//    }
 }
